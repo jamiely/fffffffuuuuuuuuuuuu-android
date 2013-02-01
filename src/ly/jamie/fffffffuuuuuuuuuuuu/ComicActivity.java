@@ -41,10 +41,9 @@ public class ComicActivity extends Activity {
 		String title = intent.getStringExtra("title");
 		setTitle(title);
 		
-		String link = intent.getStringExtra("link");
-		link = "http://i.imgur.com/J9HK6I1.png";
+		String description = intent.getStringExtra("description");
 		
-		URL linkURL = urlForLink(link);
+		URL linkURL = new ImgurExtractor(description).extract();
 		if(linkURL == null) return;
 		
 		new DownloadImageTask().execute(linkURL);
@@ -55,18 +54,7 @@ public class ComicActivity extends Activity {
 		
 		imageView.setImageBitmap(bitmap);
 	}
-	
-	private URL urlForLink(String link) {
-		try {
-			URL linkURL = new URL(link);
-			return linkURL;
-		}
-		catch(MalformedURLException ex) {
-			// pass
-		}		
-		return null;
-	}
-	
+		
 	private class DownloadImageTask extends AsyncTask<URL, Integer, Bitmap> {
 		@Override
 		protected Bitmap doInBackground(URL... params) {

@@ -1,5 +1,6 @@
 package ly.jamie.fffffffuuuuuuuuuuuu;
 
+import java.net.URL;
 import java.util.*;
 
 import org.mcsoxford.rss.*;
@@ -39,6 +40,7 @@ public class MainActivity extends Activity {
 		Intent i = new Intent(this, ComicActivity.class);
 		i.putExtra("title", item.getTitle());
 		i.putExtra("link", item.getLink().toString());
+		i.putExtra("description", item.getDescription().toString());
 		this.startActivity(i);
 	}
 	
