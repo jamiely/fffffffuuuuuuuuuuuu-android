@@ -3,6 +3,7 @@
 	<name>fffffffuuuuuuuuuuuu</name>
 	<comment></comment>
 	<projects>
+		<project>android-rss</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
