@@ -44,7 +44,6 @@ public class MainActivity extends Activity {
 	private void setupListView() {
 		this.setListAdapterUsingData(this.listData());
 		this.listView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
 			public void onItemClick(AdapterView parentView, View childView, int position,
 					long id) {
 				handleSelection(position);
