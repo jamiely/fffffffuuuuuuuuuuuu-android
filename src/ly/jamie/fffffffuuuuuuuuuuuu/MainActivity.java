@@ -37,9 +37,7 @@ public class MainActivity extends Activity {
 	
 	private void gotoComic(Comic item) {
 		Intent i = new Intent(this, ComicActivity.class);
-		i.putExtra("title", item.getTitle());
-		i.putExtra("link", item.getURL().toString());
-		i.putExtra("description", item.getDescription());
+		i.putExtra("comic", item);
 		this.startActivity(i);
 	}
 	
