@@ -10,8 +10,13 @@ import java.net.URL;
 public class ComicFactory {
 	public static ComicFactory Shared = new ComicFactory();
 	private ComicFactory(){}
+	
 	public Comic getComicFromRedditRSSItem(RSSItem item) {
 		Comic comic = getComicFromGenericRSSItem(item);
+		
+		URL url = new ImgurExtractor(comic.getDescription()).extract();
+		comic.setURL(url);
+		
 		comic.setDescription(item.getDescription());
 		return comic;
 	}
@@ -19,7 +24,7 @@ public class ComicFactory {
 		return getComicFromGenericRSSItem(item);
 	}
 	public Comic getComicFromGenericRSSItem(RSSItem item) {
-		return new Comic(item.getTitle(), uriToUrl(item.getLink()));
+		return new Comic(item.getTitle(), uriToUrl(item.getLink()), item.getDescription());
 	}
 	private static URL uriToUrl(Uri uri) {
 		try {

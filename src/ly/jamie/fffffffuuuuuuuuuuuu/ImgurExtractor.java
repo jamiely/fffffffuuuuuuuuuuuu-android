@@ -10,6 +10,8 @@ public class ImgurExtractor {
 		this.text = text;
 	}
 	public URL extract() {
+		if(this.text == null) return null;
+		
 		try {
 			return new URL(this.normalizeLink(linkInText(this.text)));
 		}

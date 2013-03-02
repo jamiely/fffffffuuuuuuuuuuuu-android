@@ -30,17 +30,19 @@ public class ComicActivity extends Activity {
 		return true;
 	}
 	
+	private void loadComic(Comic comic) {
+		if(comic == null) return;
+		
+		setTitle(comic.getTitle());
+		
+		if(comic.getURL() == null) return;
+		
+		new DownloadImageTask().execute(comic.getURL());
+	}
+	
 	private void loadIntent() {
 		Intent intent = getIntent();
-		String title = intent.getStringExtra("title");
-		setTitle(title);
-		
-		String description = intent.getStringExtra("description");
-		
-		URL linkURL = new ImgurExtractor(description).extract();
-		if(linkURL == null) return;
-		
-		new DownloadImageTask().execute(linkURL);
+		loadComic((Comic) intent.getSerializableExtra("comic"));
 	}
 	
 	private void setBitmap(Bitmap bitmap) {
