@@ -2,19 +2,13 @@ package ly.jamie.fffffffuuuuuuuuuuuu;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 
@@ -26,7 +20,7 @@ public class ComicActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_comic);
 	
-		this.imageView = (ImageView)findViewById(R.id.imageView);
+		imageView = (ImageView)findViewById(R.id.imageView);
 		loadIntent();
 	}
 

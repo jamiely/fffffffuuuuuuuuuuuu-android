@@ -1,6 +1,5 @@
 package ly.jamie.fffffffuuuuuuuuuuuu;
 
-import java.net.URL;
 import java.util.*;
 
 import org.mcsoxford.rss.*;
@@ -17,7 +16,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class MainActivity extends Activity {
-	private List<HashMap<String, String>> currentData;
 	private List<RSSItem> rssItems = null;
 	
 	@Override
@@ -27,7 +25,7 @@ public class MainActivity extends Activity {
 		
 		this.setupListView();
 		
-		new DownloadRSSTask().execute("");
+		new DownloadRSSTask().execute("http://www.reddit.com/r/fffffffuuuuuuuuuuuu.rss");
 	}
 	
 	private void handleSelection(int position) {
@@ -56,7 +54,6 @@ public class MainActivity extends Activity {
 	}
 	
 	private void setListAdapterUsingData(List<HashMap<String, String>> data) {
-		this.currentData = data;
 		this.listView().setAdapter(this.listAdapter(data));
 	}
 	
@@ -94,51 +91,18 @@ public class MainActivity extends Activity {
 	
 	private class DownloadRSSTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
 		@Override
-		protected List<HashMap<String, String>> doInBackground(String... arg0) {
-			return this.rssMapList();
+		protected List<HashMap<String, String>> doInBackground(String... feedURIs) {
+			if(feedURIs.length > 0) { 
+				RSSProcessor processor = new RSSProcessor(feedURIs[0]);
+				processor.load();
+				rssItems = processor.getRssItems();
+				return processor.getRssMapList();
+			}
+			return new ArrayList<HashMap<String, String>>();
 		}
 		
 		protected void onPostExecute(List<HashMap<String, String>> data) {
 			setListAdapterUsingData(data);
 		}
-		
-		private RSSFeed retrieveFeed() {
-			try {
-				return new RSSReader().load(this.feedURI());
-			}
-			catch(RSSReaderException ex) {
-				return null;
-			}
-		}
-		
-		private String feedURI() {
-			return "http://www.reddit.com/r/fffffffuuuuuuuuuuuu.rss";
-		}
-		
-		private List<HashMap<String, String>> rssMapList() {
-			// belongs to outer class
-			rssItems = this.rssItems();
-			
-			List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-			for(RSSItem item: rssItems) {
-				list.add(this.rssItemToMap(item));
-			}
-			return list;
-		}
-		
-		private HashMap<String, String> rssItemToMap(RSSItem item) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("title", item.getTitle());
-			map.put("link", item.getLink().toString());
-			map.put("thumbs", item.getThumbnails().toString());
-			return map;
-		}
-		
-		private List<RSSItem> rssItems() {
-			return this.retrieveFeed().getItems();
-		}
 	}
-	
-	
-	
 }
