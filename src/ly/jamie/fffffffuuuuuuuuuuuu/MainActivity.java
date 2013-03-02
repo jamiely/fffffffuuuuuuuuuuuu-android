@@ -17,6 +17,7 @@ import android.widget.SimpleAdapter;
 
 public class MainActivity extends Activity {
 	private List<RSSItem> rssItems = null;
+	private List<Comic> comics = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,14 +32,14 @@ public class MainActivity extends Activity {
 	private void handleSelection(int position) {
 		if(rssItems == null) return;
 		
-		this.gotoComic(rssItems.get(position));
+		this.gotoComic(comics.get(position));
 	}
 	
-	private void gotoComic(RSSItem item) {
+	private void gotoComic(Comic item) {
 		Intent i = new Intent(this, ComicActivity.class);
 		i.putExtra("title", item.getTitle());
-		i.putExtra("link", item.getLink().toString());
-		i.putExtra("description", item.getDescription().toString());
+		i.putExtra("link", item.getURL().toString());
+		i.putExtra("description", item.getDescription());
 		this.startActivity(i);
 	}
 	
@@ -96,6 +97,10 @@ public class MainActivity extends Activity {
 				RSSProcessor processor = new RSSProcessor(feedURIs[0]);
 				processor.load();
 				rssItems = processor.getRssItems();
+				comics = new ArrayList<Comic>();
+				for(RSSItem item: rssItems) {
+					comics.add(ComicFactory.Shared.getComicFromRedditRSSItem(item));
+				}
 				return processor.getRssMapList();
 			}
 			return new ArrayList<HashMap<String, String>>();

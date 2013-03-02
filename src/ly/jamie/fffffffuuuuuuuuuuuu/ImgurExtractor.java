@@ -19,7 +19,7 @@ public class ImgurExtractor {
 	}
 	private Pattern imgurPattern() {
 		final int flags = Pattern.CASE_INSENSITIVE;
-		return Pattern.compile("(https?://imgur.com/[A-Z0-9]+)(.png)?", flags);
+		return Pattern.compile("(https?://(i\\.)?imgur\\.com/[A-Z0-9]+)(\\.(png|jpg|gif))?", flags);
 	}
 	private Matcher matcherFor(String text) {
 		return imgurPattern().matcher(text);
