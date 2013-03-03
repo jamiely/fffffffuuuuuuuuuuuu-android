@@ -28,8 +28,9 @@ public class RSSProcessor {
 		}
 	}
 	
-	public void load() {
+	public RSSProcessor load() {
 		setRssMapList(this.retrieveRSSMapList());
+		return this;
 	}
 	
 	private List<HashMap<String, String>> retrieveRSSMapList() {
@@ -41,6 +42,16 @@ public class RSSProcessor {
 			list.add(this.rssItemToMap(item));
 		}
 		return list;
+	}
+	
+	public List<Comic> getComics() {
+		List<RSSItem> rssItems = getRssItems();
+		
+		List<Comic> comics = new ArrayList<Comic>();
+		for(RSSItem item: rssItems) {
+			comics.add(ComicFactory.Shared.getComicFromRedditRSSItem(item));
+		}
+		return comics;
 	}
 	
 	private HashMap<String, String> rssItemToMap(RSSItem item) {

@@ -16,12 +16,14 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class MainActivity extends Activity {
-	private List<RSSItem> rssItems = null;
 	private List<Comic> comics = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		this.comics = new ArrayList<Comic>();
+		
 		setContentView(R.layout.activity_main);
 		
 		this.setupListView();
@@ -30,9 +32,9 @@ public class MainActivity extends Activity {
 	}
 	
 	private void handleSelection(int position) {
-		if(rssItems == null) return;
+		if(getComics().isEmpty()) return;
 		
-		this.gotoComic(comics.get(position));
+		this.gotoComic(getComics().get(position));
 	}
 	
 	private void gotoComic(Comic item) {
@@ -68,12 +70,12 @@ public class MainActivity extends Activity {
 	private List<HashMap<String, String>> listData() {
 		List<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
 		HashMap<String, String> map1 = new HashMap<String, String>();
-		map1.put("title", "value1");
-		map1.put("link", "value2");
+		map1.put("title", "Downloading data");
+		map1.put("link", "");
 		
 		HashMap<String, String> map2 = new HashMap<String, String>();
-		map2.put("title", "V1");
-		map2.put("link", "v2");
+		map2.put("title", "...");
+		map2.put("link", "");
 		
 		data.add(map1);
 		data.add(map2);
@@ -86,25 +88,43 @@ public class MainActivity extends Activity {
 				this, data, R.layout.simple_list_item, 
 				new String[]{"title"}, new int[]{R.id.simple_list_item_text});
 	}
+
 	
-	private class DownloadRSSTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
+	private List<HashMap<String, String>> comicsToListData(List<Comic> comics) {
+		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+		for(Comic item: comics) {
+			list.add(comicToMap(item));
+		}
+		return list;
+	}
+	
+	private HashMap<String, String> comicToMap(Comic comic) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("title", comic.getTitle());
+		map.put("link", comic.getURL().toString());
+		return map;
+	}
+
+	private List<Comic> getComics() {
+		return comics;
+	}
+
+	private void setComics(List<Comic> comics) {
+		this.comics = comics;
+		setListAdapterUsingData(comicsToListData(this.comics));
+	}
+
+	private class DownloadRSSTask extends AsyncTask<String, Integer, List<Comic>> {
 		@Override
-		protected List<HashMap<String, String>> doInBackground(String... feedURIs) {
+		protected List<Comic> doInBackground(String... feedURIs) {
 			if(feedURIs.length > 0) { 
-				RSSProcessor processor = new RSSProcessor(feedURIs[0]);
-				processor.load();
-				rssItems = processor.getRssItems();
-				comics = new ArrayList<Comic>();
-				for(RSSItem item: rssItems) {
-					comics.add(ComicFactory.Shared.getComicFromRedditRSSItem(item));
-				}
-				return processor.getRssMapList();
+				return new RSSProcessor(feedURIs[0]).load().getComics();				
 			}
-			return new ArrayList<HashMap<String, String>>();
+			return new ArrayList<Comic>();
 		}
 		
-		protected void onPostExecute(List<HashMap<String, String>> data) {
-			setListAdapterUsingData(data);
+		protected void onPostExecute(List<Comic> comics) {
+			setComics(comics);
 		}
 	}
 }
