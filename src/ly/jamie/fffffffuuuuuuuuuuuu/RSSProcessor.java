@@ -44,10 +44,10 @@ public class RSSProcessor {
 		return list;
 	}
 	
-	public List<Comic> getComics() {
+	public ArrayList<Comic> getComics() {
 		List<RSSItem> rssItems = getRssItems();
 		
-		List<Comic> comics = new ArrayList<Comic>();
+		ArrayList<Comic> comics = new ArrayList<Comic>();
 		for(RSSItem item: rssItems) {
 			comics.add(ComicFactory.Shared.getComicFromRedditRSSItem(item));
 		}

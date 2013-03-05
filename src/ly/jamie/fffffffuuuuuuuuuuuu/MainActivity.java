@@ -2,8 +2,6 @@ package ly.jamie.fffffffuuuuuuuuuuuu;
 
 import java.util.*;
 
-import org.mcsoxford.rss.*;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -22,13 +20,20 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		this.comics = new ArrayList<Comic>();
+		this.comics = getInitialComics();
 		
 		setContentView(R.layout.activity_main);
 		
 		this.setupListView();
 		
 		new DownloadRSSTask().execute("http://www.reddit.com/r/fffffffuuuuuuuuuuuu.rss");
+	}
+	
+	private List<Comic> getInitialComics() {
+		@SuppressWarnings("unchecked")
+		List<Comic> cached = (List<Comic>) Cache2.Shared.get("comics");
+		if(cached != null) return cached;
+		return new ArrayList<Comic>();
 	}
 	
 	private void handleSelection(int position) {
@@ -46,7 +51,7 @@ public class MainActivity extends Activity {
 	private void setupListView() {
 		this.setListAdapterUsingData(this.listData());
 		this.listView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView parentView, View childView, int position,
+			public void onItemClick(AdapterView<?> parentView, View childView, int position,
 					long id) {
 				handleSelection(position);
 			}
@@ -109,21 +114,22 @@ public class MainActivity extends Activity {
 		return comics;
 	}
 
-	private void setComics(List<Comic> comics) {
+	private void setComics(ArrayList<Comic> comics) {
 		this.comics = comics;
+		Cache2.Shared.set("comics", comics);
 		setListAdapterUsingData(comicsToListData(this.comics));
 	}
 
-	private class DownloadRSSTask extends AsyncTask<String, Integer, List<Comic>> {
+	private class DownloadRSSTask extends AsyncTask<String, Integer, ArrayList<Comic>> {
 		@Override
-		protected List<Comic> doInBackground(String... feedURIs) {
+		protected ArrayList<Comic> doInBackground(String... feedURIs) {
 			if(feedURIs.length > 0) { 
 				return new RSSProcessor(feedURIs[0]).load().getComics();				
 			}
 			return new ArrayList<Comic>();
 		}
 		
-		protected void onPostExecute(List<Comic> comics) {
+		protected void onPostExecute(ArrayList<Comic> comics) {
 			setComics(comics);
 		}
 	}
