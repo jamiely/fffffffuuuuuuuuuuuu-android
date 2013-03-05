@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
 	
 	private List<Comic> getInitialComics() {
 		@SuppressWarnings("unchecked")
-		List<Comic> cached = (List<Comic>) Cache2.Shared.get("comics");
+		List<Comic> cached = (List<Comic>) Cache.Shared.get("comics");
 		if(cached != null) return cached;
 		return new ArrayList<Comic>();
 	}
@@ -116,7 +116,7 @@ public class MainActivity extends Activity {
 
 	private void setComics(ArrayList<Comic> comics) {
 		this.comics = comics;
-		Cache2.Shared.set("comics", comics);
+		Cache.Shared.set("comics", comics);
 		setListAdapterUsingData(comicsToListData(this.comics));
 	}
 
