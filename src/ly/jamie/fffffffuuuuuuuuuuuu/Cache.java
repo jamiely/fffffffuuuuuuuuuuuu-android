@@ -10,9 +10,16 @@ public class Cache {
 		_cache = new LruCache<String, Serializable>(1 * 1024 * 1024); // 1MB
 	}
 	public Serializable get(String key) {
-		return _cache.get(key);
+		return get(key, true);
 	}
+	// Avoid doing this on the main thread
+	public Serializable get(String key, Boolean checkMemoryOnly) {
+		Serializable value = _cache.get(key);
+		return value;
+	}
+	// Avoid doing this on the main thread
 	public Serializable set(String key, Serializable value) {
-		return _cache.put(key, value);
+		_cache.put(key, value);
+		return value;
 	}
 }

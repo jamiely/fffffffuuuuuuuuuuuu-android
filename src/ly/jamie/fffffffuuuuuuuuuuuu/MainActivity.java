@@ -99,10 +99,12 @@ public class MainActivity extends Activity {
 		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 		for(Comic item: comics) {
 			list.add(comicToMap(item));
+
 		}
+
 		return list;
 	}
-	
+
 	private HashMap<String, String> comicToMap(Comic comic) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("title", comic.getTitle());
@@ -116,7 +118,6 @@ public class MainActivity extends Activity {
 
 	private void setComics(ArrayList<Comic> comics) {
 		this.comics = comics;
-		Cache.Shared.set("comics", comics);
 		setListAdapterUsingData(comicsToListData(this.comics));
 	}
 
@@ -130,6 +131,7 @@ public class MainActivity extends Activity {
 		}
 		
 		protected void onPostExecute(ArrayList<Comic> comics) {
+			Cache.Shared.set("comics", comics);
 			setComics(comics);
 		}
 	}
