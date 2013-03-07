@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSItem;
-import org.mcsoxford.rss.rssreader;
+import org.mcsoxford.rss.RSSReader;
 import org.mcsoxford.rss.RSSReaderException;
 
 public class RSSProcessor {
